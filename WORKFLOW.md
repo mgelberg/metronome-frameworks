@@ -2,8 +2,7 @@
 
 ## Branch Structure
 
-- **`vercel-deployment`** - Production branch (deploys to metronomeframeworks.com)
-- **`main`** - Stable branch (keep in sync with vercel-deployment)
+- **`main`** - Production branch (deploys to metronomeframeworks.com)
 - **`dev`** - Development/staging branch (gets preview URLs)
 - **Feature branches** - For specific features (also get preview URLs)
 
@@ -58,13 +57,10 @@ git checkout main
 # Merge dev into main
 git merge dev
 
-# Push to main
+# Push to production
 git push
 
-# Sync vercel-deployment with main (for production deploy)
-git checkout vercel-deployment
-git merge main
-git push
+# Switch back to dev
 git checkout dev
 ```
 
