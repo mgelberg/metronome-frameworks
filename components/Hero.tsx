@@ -42,7 +42,7 @@ export const Hero: React.FC<HeroProps> = ({ theme }) => {
             {/* Adjusted font sizes to prevent overlap with image on medium screens */}
             <h1 className={`text-5xl md:text-6xl lg:text-7xl mb-6 break-words hyphens-auto ${theme.typography.heading} ${theme.colors.text}`}>
               Metronome <br/>
-              <span className={`${theme.colors.accent}`}>Frameworks.</span>
+              <span className={`${theme.colors.accent} whitespace-nowrap`}>Frameworks.</span>
             </h1>
             
             <p className={`text-lg md:text-xl mb-8 opacity-80 max-w-lg leading-relaxed ${theme.typography.body} ${theme.colors.text}`}>
