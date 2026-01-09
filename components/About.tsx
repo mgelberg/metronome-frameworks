@@ -18,7 +18,7 @@ export const About: React.FC<AboutProps> = ({ theme }) => {
             <div className={`relative rounded-xl overflow-hidden aspect-[4/5] ${theme.colors.panel} shadow-xl`}>
               {/* NOTE: Update this src with your actual LinkedIn profile picture URL */}
               <img 
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=800&q=80" 
+                src="/headshot.jpeg"
                 alt="Michael Gelberg"
                 className="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-700"
               />
@@ -60,7 +60,7 @@ export const About: React.FC<AboutProps> = ({ theme }) => {
 
                <div className={`flex items-center gap-2 font-mono text-sm opacity-60 ${theme.colors.text}`}>
                  <MapPin className="w-4 h-4" />
-                 BASED IN LOS ANGELES, CA
+                 BASED IN PHILADELPHIA, PA
                </div>
             </div>
           </div>
