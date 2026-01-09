@@ -15,13 +15,7 @@ export interface Theme {
     heading: string;
     body: string;
   };
-  vibe: string; // Description for the AI
-}
-
-export interface BrandVoice {
-  tagline: string;
-  missionStatement: string;
-  keywords: string[];
+  vibe: string;
 }
 
 export interface NavItem {

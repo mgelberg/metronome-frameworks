@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { Theme, BrandVoice } from '../types';
-import { generateBrandVoice } from '../services/geminiService';
-import { Sparkles, Loader2, type LucideIcon, Palette, Type as TypeIcon } from 'lucide-react';
+import React from 'react';
+import { Theme } from '../types';
+import { Palette, Type as TypeIcon } from 'lucide-react';
 
 interface StyleGuideProps {
   theme: Theme;
@@ -10,27 +9,6 @@ interface StyleGuideProps {
 }
 
 export const StyleGuide: React.FC<StyleGuideProps> = ({ theme, setTheme, availableThemes }) => {
-  const [loading, setLoading] = useState(false);
-  const [brandVoice, setBrandVoice] = useState<BrandVoice | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleGenerateVoice = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const voice = await generateBrandVoice(theme);
-      setBrandVoice(voice);
-    } catch (err) {
-      setError("Could not summon the creative muse. Check API key.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Re-generate voice when theme changes if voice was already present
-  React.useEffect(() => {
-    setBrandVoice(null);
-  }, [theme]);
 
   return (
     <section id="style-guide" className={`py-20 px-6 ${theme.colors.bg} ${theme.colors.border} border-t`}>
@@ -114,80 +92,6 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ theme, setTheme, availab
                    <p className={`text-xs mt-2 opacity-50 ${theme.colors.text} font-mono`}>Body Family</p>
                 </div>
              </div>
-          </div>
-
-          {/* AI Brand Voice Generator */}
-          <div className={`p-8 rounded-2xl border-2 border-dashed ${theme.colors.border} relative overflow-hidden flex flex-col`}>
-             <div className="flex items-center gap-2 mb-6 z-10">
-                <Sparkles className={`w-5 h-5 ${theme.colors.accent}`} />
-                <h3 className={`text-xl font-bold ${theme.colors.text} ${theme.typography.heading}`}>AI Brand Voice</h3>
-             </div>
-
-             <div className="flex-grow z-10">
-               {!brandVoice && !loading && (
-                 <div className="h-full flex flex-col items-center justify-center text-center p-6 opacity-60">
-                    <p className={`mb-6 ${theme.typography.body} ${theme.colors.text}`}>
-                        See how this visual style translates into written copy. 
-                        Generate a tagline and mission statement matching the "{theme.name}" vibe.
-                    </p>
-                    <button 
-                      onClick={handleGenerateVoice}
-                      className={`px-6 py-3 rounded-full font-bold transition-transform hover:scale-105 active:scale-95 flex items-center gap-2 ${theme.colors.primary} text-white`}
-                    >
-                        <Sparkles className="w-4 h-4" />
-                        Generate Manifesto
-                    </button>
-                 </div>
-               )}
-
-               {loading && (
-                 <div className="h-full flex flex-col items-center justify-center">
-                    <Loader2 className={`w-8 h-8 animate-spin ${theme.colors.accent}`} />
-                    <p className={`mt-4 ${theme.typography.body} ${theme.colors.text} animate-pulse`}>
-                        Analyzing color psychology...
-                    </p>
-                 </div>
-               )}
-
-               {brandVoice && (
-                 <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <div>
-                        <p className={`text-xs uppercase tracking-widest opacity-50 mb-1 ${theme.colors.text}`}>Tagline</p>
-                        <p className={`text-2xl md:text-3xl ${theme.typography.heading} ${theme.colors.accent}`}>
-                            "{brandVoice.tagline}"
-                        </p>
-                    </div>
-                    <div>
-                        <p className={`text-xs uppercase tracking-widest opacity-50 mb-1 ${theme.colors.text}`}>Mission</p>
-                        <p className={`text-lg leading-relaxed ${theme.typography.body} ${theme.colors.text}`}>
-                            {brandVoice.missionStatement}
-                        </p>
-                    </div>
-                    <div>
-                        <p className={`text-xs uppercase tracking-widest opacity-50 mb-2 ${theme.colors.text}`}>Keywords</p>
-                        <div className="flex flex-wrap gap-2">
-                            {brandVoice.keywords.map((k, i) => (
-                                <span key={i} className={`px-3 py-1 rounded-full text-xs font-bold ${theme.colors.bg} ${theme.colors.text} border ${theme.colors.border}`}>
-                                    #{k}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                    <button 
-                      onClick={handleGenerateVoice}
-                      className={`mt-4 text-sm underline opacity-50 hover:opacity-100 ${theme.colors.text}`}
-                    >
-                        Regenerate
-                    </button>
-                 </div>
-               )}
-               {error && (
-                   <div className="text-red-500 text-sm text-center mt-4">{error}</div>
-               )}
-             </div>
-
-             {/* Background decoration */}
-             <div className={`absolute -bottom-10 -right-10 w-64 h-64 rounded-full opacity-5 ${theme.colors.secondary}`}></div>
           </div>
 
         </div>
