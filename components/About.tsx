@@ -37,7 +37,7 @@ export const About: React.FC<AboutProps> = ({ theme }) => {
             
             <div className={`space-y-6 text-lg opacity-80 ${theme.typography.body} ${theme.colors.text}`}>
               <p>
-                Metronome Frameworks was born from a desire to connect more directly with the people who make the music industry turn: the artists and their managers.
+                Metronome Frameworks was founded by me, Michael Gelberg, in May 2025.
               </p>
               <p>
                 With a background that straddles creative management and data analytics, I help artists navigate an increasingly complex landscape. We move beyond vanity metrics to build sustainable careers on your terms.
