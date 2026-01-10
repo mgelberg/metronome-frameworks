@@ -9,7 +9,7 @@ interface ContactProps {
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
 // Replace this with your deployed Google Apps Script web app URL
-const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqhZ4zoxYC1RuGPnCs06vVn9ujp-1TsFEyPAsm-tKe-x4HVjupobyLp-ouah1mC3o95A/exec';
 
 export const Contact: React.FC<ContactProps> = ({ theme }) => {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
