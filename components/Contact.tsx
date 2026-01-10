@@ -1,17 +1,48 @@
 import React, { useState } from 'react';
 import { Theme } from '../types';
-import { Send } from 'lucide-react';
+import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 
 interface ContactProps {
   theme: Theme;
 }
 
+type FormStatus = 'idle' | 'loading' | 'success' | 'error';
+
+// Replace this with your deployed Google Apps Script web app URL
+const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
 export const Contact: React.FC<ContactProps> = ({ theme }) => {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
+  const [status, setStatus] = useState<FormStatus>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("This is a demo form. In a real app, this would send to your backend.");
+    setStatus('loading');
+    setErrorMessage('');
+
+    try {
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Required for Google Apps Script
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formState.name,
+          email: formState.email,
+          message: formState.message,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+
+      // With no-cors mode, we can't read the response, but if no error was thrown, assume success
+      setStatus('success');
+      setFormState({ name: '', email: '', message: '' });
+    } catch (error) {
+      setStatus('error');
+      setErrorMessage('Something went wrong. Please try again or email directly.');
+    }
   };
 
   return (
@@ -32,10 +63,12 @@ export const Contact: React.FC<ContactProps> = ({ theme }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className={`text-sm font-bold uppercase tracking-wider ${theme.colors.text}`}>Name</label>
-                <input 
-                  type="text" 
-                  className={`w-full p-4 rounded-lg bg-transparent border-2 outline-none focus:ring-2 focus:ring-offset-2 
-                    ${theme.colors.border} ${theme.colors.text} focus:${theme.colors.border}`}
+                <input
+                  type="text"
+                  disabled={status === 'loading'}
+                  className={`w-full p-4 rounded-lg bg-transparent border-2 outline-none focus:ring-2 focus:ring-offset-2
+                    ${theme.colors.border} ${theme.colors.text} focus:${theme.colors.border}
+                    ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
                   placeholder="Artist or Manager Name"
                   value={formState.name}
                   onChange={(e) => setFormState({...formState, name: e.target.value})}
@@ -44,10 +77,12 @@ export const Contact: React.FC<ContactProps> = ({ theme }) => {
               </div>
               <div className="space-y-2">
                 <label className={`text-sm font-bold uppercase tracking-wider ${theme.colors.text}`}>Email</label>
-                <input 
-                  type="email" 
-                  className={`w-full p-4 rounded-lg bg-transparent border-2 outline-none focus:ring-2 focus:ring-offset-2 
-                    ${theme.colors.border} ${theme.colors.text} focus:${theme.colors.border}`}
+                <input
+                  type="email"
+                  disabled={status === 'loading'}
+                  className={`w-full p-4 rounded-lg bg-transparent border-2 outline-none focus:ring-2 focus:ring-offset-2
+                    ${theme.colors.border} ${theme.colors.text} focus:${theme.colors.border}
+                    ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
                   placeholder="you@example.com"
                   value={formState.email}
                   onChange={(e) => setFormState({...formState, email: e.target.value})}
@@ -58,10 +93,12 @@ export const Contact: React.FC<ContactProps> = ({ theme }) => {
 
             <div className="space-y-2">
               <label className={`text-sm font-bold uppercase tracking-wider ${theme.colors.text}`}>The Vision</label>
-              <textarea 
+              <textarea
                 rows={4}
-                className={`w-full p-4 rounded-lg bg-transparent border-2 outline-none focus:ring-2 focus:ring-offset-2 
-                  ${theme.colors.border} ${theme.colors.text} focus:${theme.colors.border}`}
+                disabled={status === 'loading'}
+                className={`w-full p-4 rounded-lg bg-transparent border-2 outline-none focus:ring-2 focus:ring-offset-2
+                  ${theme.colors.border} ${theme.colors.text} focus:${theme.colors.border}
+                  ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
                 placeholder="Tell us about your project..."
                 value={formState.message}
                 onChange={(e) => setFormState({...formState, message: e.target.value})}
@@ -69,14 +106,47 @@ export const Contact: React.FC<ContactProps> = ({ theme }) => {
               />
             </div>
 
-            <button 
+            <button
               type="submit"
-              className={`w-full py-4 rounded-lg font-bold text-lg transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2
-                ${theme.colors.primary} text-white shadow-lg`}
+              disabled={status === 'loading'}
+              className={`w-full py-4 rounded-lg font-bold text-lg transition-all flex items-center justify-center gap-2
+                ${theme.colors.primary} text-white shadow-lg
+                ${status === 'loading' ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.01] active:scale-[0.99]'}`}
             >
-              Send Message
-              <Send className="w-5 h-5" />
+              {status === 'loading' ? (
+                <>
+                  Sending...
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                </>
+              ) : (
+                <>
+                  Send Message
+                  <Send className="w-5 h-5" />
+                </>
+              )}
             </button>
+
+            {/* Success Message */}
+            {status === 'success' && (
+              <div className={`flex items-center gap-3 p-4 rounded-lg bg-green-500/10 border border-green-500/30 ${theme.colors.text}`}>
+                <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+                <div>
+                  <p className="font-bold">Message sent!</p>
+                  <p className="text-sm opacity-70">Thanks for reaching out. I'll get back to you soon.</p>
+                </div>
+              </div>
+            )}
+
+            {/* Error Message */}
+            {status === 'error' && (
+              <div className={`flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30 ${theme.colors.text}`}>
+                <AlertCircle className="w-6 h-6 text-red-500 flex-shrink-0" />
+                <div>
+                  <p className="font-bold">Something went wrong</p>
+                  <p className="text-sm opacity-70">{errorMessage}</p>
+                </div>
+              </div>
+            )}
           </form>
 
         </div>
