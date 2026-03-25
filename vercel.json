@@ -1,0 +1,26 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "metronomeframeworks.com"
+        }
+      ],
+      "destination": "https://metronome.llc/$1",
+      "permanent": false
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.metronomeframeworks.com"
+        }
+      ],
+      "destination": "https://metronome.llc/$1",
+      "permanent": false
+    }
+  ]
+}
